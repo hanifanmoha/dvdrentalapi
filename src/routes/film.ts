@@ -9,7 +9,7 @@ filmRouter.get('/', (req: Request, res: Response) => {
 });
 
 filmRouter.get('/test', (req: Request, res: Response) => {
-  res.send({ test: 123 });
+  res.send({ test: 1234 });
 });
 
 export default filmRouter;
