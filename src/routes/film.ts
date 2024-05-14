@@ -8,4 +8,8 @@ filmRouter.get('/', (req: Request, res: Response) => {
   res.send(films);
 });
 
+filmRouter.get('/test', (req: Request, res: Response) => {
+  res.send({ test: 123 });
+});
+
 export default filmRouter;
