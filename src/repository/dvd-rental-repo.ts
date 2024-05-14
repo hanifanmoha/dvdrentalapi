@@ -1,11 +1,12 @@
-const data = require('./dvdrental.json');
+// import dvdRentalDB from './dvdrental';
+const dvdRentalDB = require('../dvdrental.json');
 
 function getFilm() {
-  return data.film;
+  return dvdRentalDB.film;
 }
 
 function getFilmByID(id: number) {
-  return data.film.find((f: any) => f.film_id === id);
+  return dvdRentalDB.film.find((f: any) => f.film_id === id);
 }
 
 const DVDRentalRepo = { getFilm, getFilmByID };

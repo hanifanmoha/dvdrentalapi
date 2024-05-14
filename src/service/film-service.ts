@@ -6,7 +6,7 @@ function getFilm() {
 }
 
 function getFilmByID(id: number) {
-  const film = DVDRentalRepo.getFilmByID(id);
+  const film: any = DVDRentalRepo.getFilmByID(id);
   return film;
 }
 
