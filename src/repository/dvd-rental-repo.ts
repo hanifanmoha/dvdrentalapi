@@ -1,5 +1,5 @@
 // import dvdRentalDB from './dvdrental';
-const dvdRentalDB = require('../dvdrental.json');
+const dvdRentalDB = require('../../dvdrental.json');
 
 function getFilm() {
   return dvdRentalDB.film;

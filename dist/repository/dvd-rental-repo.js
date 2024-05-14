@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 // import dvdRentalDB from './dvdrental';
-const dvdRentalDB = require('../dvdrental.json');
+const dvdRentalDB = require('../../dvdrental.json');
 function getFilm() {
     return dvdRentalDB.film;
 }
