@@ -10,4 +10,7 @@ filmRouter.get('/', (req, res) => {
     const films = dvdrentaldb_1.default.getFilm();
     res.send(films);
 });
+filmRouter.get('/test', (req, res) => {
+    res.send({ test: 12345 });
+});
 exports.default = filmRouter;
