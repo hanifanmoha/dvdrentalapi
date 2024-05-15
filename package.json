@@ -16,11 +16,13 @@
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
+    "@types/lodash": "^4.17.1",
     "@types/node": "^20.12.12",
     "nodemon": "^3.1.0",
     "pre-commit": "^1.2.2",

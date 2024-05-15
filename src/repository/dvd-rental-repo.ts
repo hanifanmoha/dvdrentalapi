@@ -1,14 +1,47 @@
+import _ from 'lodash';
+import {
+  Actor,
+  Category,
+  Film,
+  Language,
+} from '../service/models/dvd-rental-model';
+import { DVDRentalRepositoryModel } from '../service/models/dvd-rental-repository-model';
+import { PaginationQuery } from '../service/models/utils';
+import { filterSearch } from './utils/utils';
+
 // import dvdRentalDB from './dvdrental';
 const dvdRentalDB = require('../../dvdrental.json');
 
-function getFilm() {
-  return dvdRentalDB.film;
+const films: Film[] = _.sortBy(dvdRentalDB.film, ['film_id']);
+const categories: Category[] = _.sortBy(dvdRentalDB.category, ['category_id']);
+const languages: Language[] = _.sortBy(dvdRentalDB.language, ['language_id']);
+const actors: Actor[] = _.sortBy(dvdRentalDB.actor, ['actor_id']);
+
+class DVDRentalRepo implements DVDRentalRepositoryModel {
+  getFilms(query: PaginationQuery): { result: Film[]; totalData: number } {
+    if (query.page < 1) {
+      return { result: [], totalData: 0 };
+    }
+
+    const filtered = filterSearch<Film>(films, query.search, [
+      'title',
+      'description',
+    ]);
+
+    const start = query.length * (query.page - 1);
+    const end = query.length * query.page;
+    return {
+      result: _.slice(filtered, start, end),
+      totalData: filtered.length,
+    };
+  }
+
+  getFilmByID(film_id: number): Film | undefined {
+    const film = films.find((f) => f.film_id === film_id);
+    return film;
+  }
 }
 
-function getFilmByID(id: number) {
-  return dvdRentalDB.film.find((f: any) => f.film_id === id);
-}
+const dvdRentalRepo = new DVDRentalRepo();
 
-const DVDRentalRepo = { getFilm, getFilmByID };
-
-export default DVDRentalRepo;
+export default dvdRentalRepo;
