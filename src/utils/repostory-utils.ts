@@ -6,9 +6,9 @@ export function filterSearch<T>(
   keys: (keyof T)[]
 ): T[] {
   const filtered = _.filter(array, (t: T) => {
-    const values = keys.map((key) => t[key]);
-    for (let val of values) {
-      if (_.includes((val as string).toLowerCase(), search)) {
+    for (let key of keys) {
+      const val = t[key];
+      if (_.includes((val as string).toLowerCase(), search.toLowerCase())) {
         return true;
       }
     }

@@ -1,12 +1,12 @@
 import { PaginationQuery } from './models/controller-models';
-import dvdRentalRepo from './repository';
+import * as repository from './repository';
 
 export function getFilm(query: PaginationQuery) {
-  const films = dvdRentalRepo.getFilms(query);
+  const films = repository.getFilms(query);
   return films;
 }
 
 export function getFilmByID(id: number) {
-  const film: any = dvdRentalRepo.getFilmByID(id);
+  const film: any = repository.getFilmByID(id);
   return film;
 }
