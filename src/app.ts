@@ -2,8 +2,7 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-import indexRouter from './routes/index';
-import filmRouter from './routes/film-router';
+import { indexRouter, filmRouter } from './router';
 
 dotenv.config();
 

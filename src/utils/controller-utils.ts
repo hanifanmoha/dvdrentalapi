@@ -1,5 +1,8 @@
-import { PaginationQuery } from '../../service/models/utils';
-import { GeneralResponse, PaginationResponseData } from '../models/models';
+import { PaginationQuery } from '../models/controller-models';
+import {
+  GeneralResponse,
+  PaginationResponseData,
+} from '../models/controller-models';
 
 export function parsePaginationQuery(query: any): PaginationQuery {
   const page = parseInt(query.page) || 1;

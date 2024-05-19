@@ -1,12 +1,21 @@
 import express, { Router, Request, Response } from 'express';
-import filmService from '../service/dvd-rental-service';
+import filmService from './service';
 import {
   generateGeneralResponse,
   generatePaginationResponse,
   parsePaginationQuery,
-} from './utils/utils';
-import { GeneralResponse, PaginationResponseData } from './models/models';
-import { Film } from '../service/models/dvd-rental-model';
+} from './utils/controller-utils';
+import {
+  GeneralResponse,
+  PaginationResponseData,
+} from './models/controller-models';
+import { Film } from './models/data-models';
+
+const indexRouter: Router = express.Router();
+
+indexRouter.get('/', (req: Request, res: Response) => {
+  res.send('DVD Rental API');
+});
 
 const filmRouter: Router = express.Router();
 
@@ -44,4 +53,4 @@ filmRouter.get(
   }
 );
 
-export default filmRouter;
+export { indexRouter, filmRouter };

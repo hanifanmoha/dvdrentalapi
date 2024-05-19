@@ -11,3 +11,9 @@ export type PaginationResponseData<T> = {
   length: number;
   total_page: number;
 };
+
+export type PaginationQuery = {
+  length: number;
+  page: number;
+  search: string;
+};

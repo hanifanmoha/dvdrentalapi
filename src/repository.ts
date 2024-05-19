@@ -1,23 +1,17 @@
 import _ from 'lodash';
-import {
-  Actor,
-  Category,
-  Film,
-  Language,
-} from '../service/models/dvd-rental-model';
-import { DVDRentalRepositoryModel } from '../service/models/dvd-rental-repository-model';
-import { PaginationQuery } from '../service/models/utils';
-import { filterSearch } from './utils/utils';
+import { Actor, Category, Film, Language } from './models/data-models';
+import { PaginationQuery } from './models/controller-models';
+import { filterSearch } from './utils/repostory-utils';
 
 // import dvdRentalDB from './dvdrental';
-const dvdRentalDB = require('../../dvdrental.json');
+const dvdRentalDB = require('../dvdrental.json');
 
 const films: Film[] = _.sortBy(dvdRentalDB.film, ['film_id']);
 const categories: Category[] = _.sortBy(dvdRentalDB.category, ['category_id']);
 const languages: Language[] = _.sortBy(dvdRentalDB.language, ['language_id']);
 const actors: Actor[] = _.sortBy(dvdRentalDB.actor, ['actor_id']);
 
-class DVDRentalRepo implements DVDRentalRepositoryModel {
+class DVDRentalRepo {
   getFilms(query: PaginationQuery): { result: Film[]; totalData: number } {
     if (query.page < 1) {
       return { result: [], totalData: 0 };
