@@ -2,7 +2,7 @@ import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-import { indexRouter, filmRouter } from './router';
+import router from './router';
 
 dotenv.config();
 
@@ -12,7 +12,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', indexRouter);
-app.use('/films', filmRouter);
+app.use('/', router);
 
 export default app;
