@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategriesByFilmID = exports.getActorsByFilmID = exports.getLanguageByID = exports.getFilmByID = exports.getFilmsByYear = exports.getFilms = void 0;
+exports.getCategriesByFilmID = exports.getCategoryByID = exports.getCategories = exports.getActorsByFilmID = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilmsByYear = exports.getFilms = exports.getList = void 0;
 const lodash_1 = __importDefault(require("lodash"));
 const repository_adapter_1 = require("./utils/repository-adapter");
 const dvdRentalDB = require('../dvdrental.json');
@@ -29,6 +29,20 @@ const actorAdapter = new repository_adapter_1.RepositoryAdapter(actors, 'actor_i
 ]);
 const filmCategoryAdapter = new repository_adapter_1.RepositoryAdapterRelation(filmsCategories, films, categories, 'film_id', 'category_id');
 const filmActorAdapter = new repository_adapter_1.RepositoryAdapterRelation(filmsActors, films, actors, 'film_id', 'actor_id');
+// General
+function getList(adapter, query) {
+    if (query.page < 1) {
+        return { result: [], totalData: 0 };
+    }
+    const filtered = adapter.getFiltered(query.search);
+    const start = query.length * (query.page - 1);
+    const end = query.length * query.page;
+    return {
+        result: lodash_1.default.slice(filtered, start, end),
+        totalData: filtered.length,
+    };
+}
+exports.getList = getList;
 // Films
 function getFilms(query) {
     if (query.page < 1) {
@@ -52,16 +66,36 @@ function getFilmByID(id) {
 }
 exports.getFilmByID = getFilmByID;
 // Languages
+function getLanguages(query) {
+    return getList(languageAdapter, query);
+}
+exports.getLanguages = getLanguages;
 function getLanguageByID(id) {
     return languageAdapter.getByID(id);
 }
 exports.getLanguageByID = getLanguageByID;
 // Actors
+function getActors(query) {
+    return getList(actorAdapter, query);
+}
+exports.getActors = getActors;
+function getActorByID(id) {
+    return actorAdapter.getByID(id);
+}
+exports.getActorByID = getActorByID;
 function getActorsByFilmID(filmId) {
     return filmActorAdapter.getByA(filmId);
 }
 exports.getActorsByFilmID = getActorsByFilmID;
 // Categories
+function getCategories(query) {
+    return getList(categoryAdapter, query);
+}
+exports.getCategories = getCategories;
+function getCategoryByID(id) {
+    return categoryAdapter.getByID(id);
+}
+exports.getCategoryByID = getCategoryByID;
 function getCategriesByFilmID(filmId) {
     return filmCategoryAdapter.getByA(filmId);
 }

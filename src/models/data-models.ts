@@ -60,3 +60,50 @@ export type FilmActor = {
   film_id: number;
   last_update: string;
 };
+
+export type Customer = {
+  // default
+  customer_id: number;
+  store_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  address_id: number;
+  activebool: boolean;
+  create_date: string;
+  last_update: string;
+  active: number;
+  // additionals
+  address: Address;
+};
+
+export type Address = {
+  // default
+  address_id: number;
+  address: string;
+  address2: string | null;
+  district: string;
+  city_id: number;
+  postal_code: string;
+  phone: string;
+  last_update: string;
+  // additionals
+  city: City;
+};
+
+export type City = {
+  // default
+  city_id: number;
+  city: string;
+  country_id: number;
+  last_update: string;
+  // additionals
+  country: Country;
+};
+
+export type Country = {
+  // default
+  country_id: number;
+  country: string;
+  last_update: string;
+};

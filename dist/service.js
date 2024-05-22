@@ -23,12 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFilmByID = exports.getFilm = void 0;
+exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = void 0;
 const repository = __importStar(require("./repository"));
-function getFilm(query) {
+// Films
+function getFilms(query) {
     return repository.getFilms(query);
 }
-exports.getFilm = getFilm;
+exports.getFilms = getFilms;
 function getFilmByID(id) {
     const film = repository.getFilmByID(id);
     if (!film) {
@@ -43,3 +44,42 @@ function getFilmByID(id) {
     return film;
 }
 exports.getFilmByID = getFilmByID;
+// Languages
+function getLanguages(query) {
+    return repository.getLanguages(query);
+}
+exports.getLanguages = getLanguages;
+function getLanguageByID(id) {
+    const language = repository.getLanguageByID(id);
+    if (!language) {
+        return;
+    }
+    return language;
+}
+exports.getLanguageByID = getLanguageByID;
+// Actors
+function getActors(query) {
+    return repository.getActors(query);
+}
+exports.getActors = getActors;
+function getActorByID(id) {
+    const actor = repository.getActorByID(id);
+    if (!actor) {
+        return;
+    }
+    return actor;
+}
+exports.getActorByID = getActorByID;
+// Categories
+function getCategories(query) {
+    return repository.getCategories(query);
+}
+exports.getCategories = getCategories;
+function getCategoryByID(id) {
+    const category = repository.getCategoryByID(id);
+    if (!category) {
+        return;
+    }
+    return category;
+}
+exports.getCategoryByID = getCategoryByID;

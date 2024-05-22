@@ -36,7 +36,7 @@ export function generatePaginationResponse<T>(
   const paginationResponse: PaginationResponseData<T> = {
     result: result,
     page: query.page,
-    length: query.length,
+    length: result.length,
     total_page: totalPage,
   };
   return generateGeneralResponse<PaginationResponseData<T>>(

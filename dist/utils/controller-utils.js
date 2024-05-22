@@ -22,7 +22,7 @@ function generatePaginationResponse(query, result, totalData, message = 'Success
     const paginationResponse = {
         result: result,
         page: query.page,
-        length: query.length,
+        length: result.length,
         total_page: totalPage,
     };
     return generateGeneralResponse(true, message, paginationResponse, null);
