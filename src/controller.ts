@@ -9,7 +9,15 @@ import {
   GeneralResponse,
   PaginationResponseData,
 } from './models/controller-models';
-import { Actor, Category, Film, Language } from './models/data-models';
+import {
+  Actor,
+  Category,
+  Customer,
+  Film,
+  Language,
+  Staff,
+  Store,
+} from './models/data-models';
 
 // Indexes
 
@@ -139,8 +147,105 @@ export function getCategoryByID(
   if (category) {
     const response = generateGeneralResponse(
       true,
-      'Success get categor',
+      'Success get category',
       category,
+      null
+    );
+    res.send(response);
+  } else {
+    res
+      .status(404)
+      .send(generateGeneralResponse(false, 'Not Found', null, null));
+  }
+}
+
+// Customers
+
+export function getCustomers(
+  req: Request,
+  res: Response<GeneralResponse<PaginationResponseData<Customer>>>
+) {
+  const query = parsePaginationQuery(req.query);
+  const { result, totalData } = service.getCustomers(query);
+  const response = generatePaginationResponse(query, result, totalData);
+  res.send(response);
+}
+
+export function getCustomerByID(
+  req: Request,
+  res: Response<GeneralResponse<Customer | null>>
+) {
+  const { id } = req.params;
+  const customer = service.getCustomerByID(parseInt(id));
+  if (customer) {
+    const response = generateGeneralResponse(
+      true,
+      'Success get customer',
+      customer,
+      null
+    );
+    res.send(response);
+  } else {
+    res
+      .status(404)
+      .send(generateGeneralResponse(false, 'Not Found', null, null));
+  }
+}
+
+// Stores & Staff
+
+export function getStores(
+  req: Request,
+  res: Response<GeneralResponse<PaginationResponseData<Store>>>
+) {
+  const query = parsePaginationQuery(req.query);
+  const { result, totalData } = service.getStores(query);
+  const response = generatePaginationResponse(query, result, totalData);
+  res.send(response);
+}
+
+export function getStoreByID(
+  req: Request,
+  res: Response<GeneralResponse<Store | null>>
+) {
+  const { id } = req.params;
+  const store = service.getStoreByID(parseInt(id));
+  if (store) {
+    const response = generateGeneralResponse(
+      true,
+      'Success get store',
+      store,
+      null
+    );
+    res.send(response);
+  } else {
+    res
+      .status(404)
+      .send(generateGeneralResponse(false, 'Not Found', null, null));
+  }
+}
+
+export function getStaff(
+  req: Request,
+  res: Response<GeneralResponse<PaginationResponseData<Staff>>>
+) {
+  const query = parsePaginationQuery(req.query);
+  const { result, totalData } = service.getStaff(query);
+  const response = generatePaginationResponse(query, result, totalData);
+  res.send(response);
+}
+
+export function getStaffByID(
+  req: Request,
+  res: Response<GeneralResponse<Staff | null>>
+) {
+  const { id } = req.params;
+  const staff = service.getStaffByID(parseInt(id));
+  if (staff) {
+    const response = generateGeneralResponse(
+      true,
+      'Success get staff',
+      staff,
       null
     );
     res.send(response);

@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = void 0;
+exports.getStaffByID = exports.getStaff = exports.getStoreByID = exports.getStores = exports.getCustomerByID = exports.getCustomers = exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = void 0;
 const repository = __importStar(require("./repository"));
 // Films
 function getFilms(query) {
@@ -54,6 +54,7 @@ function getLanguageByID(id) {
     if (!language) {
         return;
     }
+    language.films = repository.getFilmsByLanguageID(id);
     return language;
 }
 exports.getLanguageByID = getLanguageByID;
@@ -67,6 +68,7 @@ function getActorByID(id) {
     if (!actor) {
         return;
     }
+    actor.films = repository.getFilmsByActorID(id);
     return actor;
 }
 exports.getActorByID = getActorByID;
@@ -80,6 +82,92 @@ function getCategoryByID(id) {
     if (!category) {
         return;
     }
+    category.films = repository.getFilmsByCategoryID(id);
     return category;
 }
 exports.getCategoryByID = getCategoryByID;
+// Customers
+function getCustomers(query) {
+    return repository.getCustomers(query);
+}
+exports.getCustomers = getCustomers;
+function getCustomerByID(id) {
+    const customer = repository.getCustomerByID(id);
+    if (!customer) {
+        return;
+    }
+    const address = repository.getAddressByID(customer.address_id);
+    if (address) {
+        const city = repository.getCityByID(address.city_id);
+        if (city) {
+            const country = repository.getCountryByID(city.country_id);
+            if (country) {
+                city.country = country;
+            }
+            address.city = city;
+        }
+        customer.address = address;
+    }
+    return customer;
+}
+exports.getCustomerByID = getCustomerByID;
+// Stores & Staff
+function getStores(query) {
+    return repository.getStores(query);
+}
+exports.getStores = getStores;
+function getStoreByID(id) {
+    const store = repository.getStoreByID(id);
+    if (!store) {
+        return;
+    }
+    const address = repository.getAddressByID(store.address_id);
+    if (address) {
+        const city = repository.getCityByID(address.city_id);
+        if (city) {
+            const country = repository.getCountryByID(city.country_id);
+            if (country) {
+                city.country = country;
+            }
+            address.city = city;
+        }
+        store.address = address;
+    }
+    const manager = repository.getStaffByID(store.manager_staff_id);
+    if (manager) {
+        store.manager = manager;
+    }
+    store.staff = repository
+        .getStaffByStoreID(id)
+        .filter((staff) => staff.staff_id !== store.manager_staff_id);
+    return store;
+}
+exports.getStoreByID = getStoreByID;
+function getStaff(query) {
+    return repository.getStaff(query);
+}
+exports.getStaff = getStaff;
+function getStaffByID(id) {
+    const staff = repository.getStaffByID(id);
+    if (!staff) {
+        return;
+    }
+    const address = repository.getAddressByID(staff.address_id);
+    if (address) {
+        const city = repository.getCityByID(address.city_id);
+        if (city) {
+            const country = repository.getCountryByID(city.country_id);
+            if (country) {
+                city.country = country;
+            }
+            address.city = city;
+        }
+        staff.address = address;
+    }
+    const store = repository.getStoreByID(staff.store_id);
+    if (store) {
+        staff.store = store;
+    }
+    return staff;
+}
+exports.getStaffByID = getStaffByID;

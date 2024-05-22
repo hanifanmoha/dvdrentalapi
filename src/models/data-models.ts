@@ -107,3 +107,34 @@ export type Country = {
   country: string;
   last_update: string;
 };
+
+export type Store = {
+  // default
+  store_id: number;
+  name: string;
+  manager_staff_id: number;
+  address_id: number;
+  last_update: string;
+  // additionals
+  manager: Staff;
+  address: Address;
+  staff: Staff[];
+};
+
+export type Staff = {
+  // default
+  staff_id: number;
+  first_name: string;
+  last_name: string;
+  address_id: number;
+  email: string;
+  store_id: number;
+  active: boolean;
+  username: string;
+  password: string;
+  last_update: string;
+  picture: string | null;
+  // additionals
+  address: Address;
+  store: Store;
+};
