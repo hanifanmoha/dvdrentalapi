@@ -16,3 +16,8 @@ export function filterSearch<T>(
   });
   return filtered;
 }
+
+// export function pivot<Main,Pivot,Target>(pivot:Pivot[], target: Target[], keyMain: keyof Pivot, keyTarget: keyof Pivot) : Target[] {
+//   const filteredPivot = pivot.filter(p => p[keyMain] === keyMain)
+//   return filteredPivot.filter(p => (...target.filter))
+// }

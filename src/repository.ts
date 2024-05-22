@@ -1,15 +1,59 @@
 import _ from 'lodash';
-import { Actor, Category, Film, Language } from './models/data-models';
+import {
+  Actor,
+  Category,
+  Film,
+  FilmActor,
+  FilmCategory,
+  Language,
+} from './models/data-models';
 import { PaginationQuery } from './models/controller-models';
-import { filterSearch } from './utils/repostory-utils';
+import {
+  RepositoryAdapter,
+  RepositoryAdapterRelation,
+} from './utils/repository-adapter';
 
-// import dvdRentalDB from './dvdrental';
 const dvdRentalDB = require('../dvdrental.json');
 
 const films: Film[] = _.sortBy(dvdRentalDB.film, ['film_id']);
 const categories: Category[] = _.sortBy(dvdRentalDB.category, ['category_id']);
 const languages: Language[] = _.sortBy(dvdRentalDB.language, ['language_id']);
 const actors: Actor[] = _.sortBy(dvdRentalDB.actor, ['actor_id']);
+
+const filmsCategories: FilmCategory[] = dvdRentalDB.film_category;
+const filmsActors: FilmActor[] = dvdRentalDB.film_actor;
+
+const filmAdapter = new RepositoryAdapter(films, 'film_id', [
+  'title',
+  'description',
+]);
+const languageAdapter = new RepositoryAdapter(languages, 'language_id', [
+  'name',
+]);
+const categoryAdapter = new RepositoryAdapter(categories, 'category_id', [
+  'name',
+]);
+const actorAdapter = new RepositoryAdapter(actors, 'actor_id', [
+  'first_name',
+  'last_name',
+]);
+
+const filmCategoryAdapter = new RepositoryAdapterRelation(
+  filmsCategories,
+  films,
+  categories,
+  'film_id',
+  'category_id'
+);
+const filmActorAdapter = new RepositoryAdapterRelation(
+  filmsActors,
+  films,
+  actors,
+  'film_id',
+  'actor_id'
+);
+
+// Films
 
 export function getFilms(query: PaginationQuery): {
   result: Film[];
@@ -19,10 +63,7 @@ export function getFilms(query: PaginationQuery): {
     return { result: [], totalData: 0 };
   }
 
-  const filtered = filterSearch<Film>(films, query.search, [
-    'title',
-    'description',
-  ]);
+  const filtered = filmAdapter.getFiltered(query.search);
 
   const start = query.length * (query.page - 1);
   const end = query.length * query.page;
@@ -32,7 +73,28 @@ export function getFilms(query: PaginationQuery): {
   };
 }
 
-export function getFilmByID(film_id: number): Film | undefined {
-  const film = films.find((f) => f.film_id === film_id);
-  return film;
+export function getFilmsByYear(year: number): Film[] {
+  return filmAdapter.getByKey('release_year', 2006);
+}
+
+export function getFilmByID(id: number): Film | undefined {
+  return filmAdapter.getByID(id);
+}
+
+// Languages
+
+export function getLanguageByID(id: number): Language | undefined {
+  return languageAdapter.getByID(id);
+}
+
+// Actors
+
+export function getActorsByFilmID(filmId: number): Actor[] {
+  return filmActorAdapter.getByA(filmId);
+}
+
+// Categories
+
+export function getCategriesByFilmID(filmId: number): Category[] {
+  return filmCategoryAdapter.getByA(filmId);
 }

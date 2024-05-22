@@ -16,7 +16,7 @@ export type Film = {
   // additionals
   actors: Actor[];
   language: Language;
-  categories: Category;
+  categories: Category[];
 };
 
 export type Actor = {
@@ -45,4 +45,18 @@ export type Language = {
   last_update: string;
   // additionals
   films: Film[];
+};
+
+export type FilmCategory = {
+  // default
+  film_id: number;
+  category_id: number;
+  last_update: string;
+};
+
+export type FilmActor = {
+  // default
+  actor_id: number;
+  film_id: number;
+  last_update: string;
 };

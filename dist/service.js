@@ -26,12 +26,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFilmByID = exports.getFilm = void 0;
 const repository = __importStar(require("./repository"));
 function getFilm(query) {
-    const films = repository.getFilms(query);
-    return films;
+    return repository.getFilms(query);
 }
 exports.getFilm = getFilm;
 function getFilmByID(id) {
     const film = repository.getFilmByID(id);
+    if (!film) {
+        return;
+    }
+    const language = repository.getLanguageByID(film.language_id);
+    if (language) {
+        film.language = language;
+    }
+    film.actors = repository.getActorsByFilmID(id);
+    film.categories = repository.getCategriesByFilmID(id);
     return film;
 }
 exports.getFilmByID = getFilmByID;
