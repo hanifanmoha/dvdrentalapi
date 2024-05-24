@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import * as controller from './controller';
+import { Sequelize, DataTypes } from 'sequelize';
 
 const router: Router = express.Router();
 
@@ -39,5 +40,23 @@ router.use('/categories', categoryRouter);
 router.use('/customers', customerRouter);
 router.use('/stores', storeRouter);
 router.use('/staff', staffRouter);
+
+const sequelize = new Sequelize('sqlite::memory:');
+const Test = sequelize.define('Test', {
+  x: DataTypes.NUMBER,
+});
+
+async function init() {
+  await sequelize.sync({ force: true });
+  console.log('Database & tables created!');
+}
+
+init();
+
+router.get('/mocked', async function (req, res) {
+  await Test.create({ x: Math.random() });
+  const numbers = await Test.findAll();
+  res.send(numbers);
+});
 
 export default router;
