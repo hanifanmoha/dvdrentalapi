@@ -29,7 +29,6 @@ export function getIndex(req: Request, res: Response) {
 }
 
 export function getReadMe(req: Request, res: Response) {
-  console.log('get readme');
   const p = path.join(__dirname, '..', 'README.md');
   res.sendFile(p);
 }
