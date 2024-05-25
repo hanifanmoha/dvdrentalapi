@@ -138,3 +138,43 @@ export type Staff = {
   address: Address;
   store: Store;
 };
+
+export type Rental = {
+  // default
+  rental_id: number;
+  rental_date: string;
+  inventory_id: number;
+  customer_id: number;
+  return_date: string;
+  staff_id: number;
+  last_update: string;
+  // additionals
+  film: Film;
+  store: Store;
+  customer: Customer;
+  staff: Staff;
+  payments: Payment[];
+};
+
+export type Inventory = {
+  // default
+  inventory_id: number;
+  film_id: number;
+  story_id: number;
+  last_update: string;
+  // additionals
+};
+
+export type Payment = {
+  // default
+  payment_id: number;
+  customer_id: number;
+  staff_id: number;
+  rental_id: number;
+  amount: number;
+  payment_date: number;
+  // additionals
+  staff: Staff;
+  rental: Rental;
+  customer: Customer;
+};

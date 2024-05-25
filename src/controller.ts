@@ -15,6 +15,7 @@ import {
   Customer,
   Film,
   Language,
+  Rental,
   Staff,
   Store,
 } from './models/data-models';
@@ -192,6 +193,17 @@ export function getCustomerByID(
   }
 }
 
+export function getCustomerRental(
+  req: Request,
+  res: Response<GeneralResponse<PaginationResponseData<Rental>>>
+) {
+  const query = parsePaginationQuery(req.query);
+  const { id } = req.params;
+  const { result, totalData } = service.getCustomerRental(parseInt(id), query);
+  const response = generatePaginationResponse(query, result, totalData);
+  res.send(response);
+}
+
 // Stores & Staff
 
 export function getStores(
@@ -246,6 +258,29 @@ export function getStaffByID(
       true,
       'Success get staff',
       staff,
+      null
+    );
+    res.send(response);
+  } else {
+    res
+      .status(404)
+      .send(generateGeneralResponse(false, 'Not Found', null, null));
+  }
+}
+
+// Rentals, Inventories, Payments
+
+export function getRentalByID(
+  req: Request,
+  res: Response<GeneralResponse<Rental | null>>
+) {
+  const { id } = req.params;
+  const rental = service.getRentalByID(parseInt(id));
+  if (rental) {
+    const response = generateGeneralResponse(
+      true,
+      'Success get rental',
+      rental,
       null
     );
     res.send(response);

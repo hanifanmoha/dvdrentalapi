@@ -13,7 +13,10 @@ class RepositoryAdapter {
     getAll() {
         return this.list;
     }
-    getFiltered(search) {
+    getOne(key, value) {
+        return this.list.find((f) => f[key] === value);
+    }
+    getListBySearch(search) {
         const filtered = lodash_1.default.filter(this.list, (t) => {
             for (let key of this.searchKeys) {
                 const val = t[key];
@@ -25,16 +28,16 @@ class RepositoryAdapter {
         });
         return filtered;
     }
-    getOne(key, value) {
-        return this.list.find((f) => f[key] === value);
-    }
-    getList(key, value) {
+    getListByKey(key, value) {
         if (lodash_1.default.isArray(value)) {
             return this.list.filter((item) => lodash_1.default.includes(value, item[key]));
         }
         else {
             return this.list.filter((item) => item[key] === value);
         }
+    }
+    getListByFilter(filter) {
+        return lodash_1.default.filter(this.list, filter);
     }
 }
 exports.RepositoryAdapter = RepositoryAdapter;

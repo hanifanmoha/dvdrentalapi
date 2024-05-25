@@ -5,6 +5,7 @@ import {
   Customer,
   Film,
   Language,
+  Rental,
   Staff,
   Store,
 } from './models/data-models';
@@ -116,6 +117,16 @@ export function getCustomerByID(id: number): Customer | undefined {
   return customer;
 }
 
+export function getCustomerRental(
+  customerID: number,
+  query: PaginationQuery
+): {
+  result: Rental[];
+  totalData: number;
+} {
+  return repository.getRentalsByCustomerID(customerID, query);
+}
+
 // Stores & Staff
 
 export function getStores(query: PaginationQuery): {
@@ -181,4 +192,25 @@ export function getStaffByID(id: number): Staff | undefined {
     staff.store = store;
   }
   return staff;
+}
+
+// Rentals, Inventories, Payments
+
+export function getRentalByID(id: number): Rental | undefined {
+  const rental = repository.getRentalByID(id);
+  if (!rental) return;
+  const customer = repository.getCustomerByID(rental.customer_id);
+  if (customer) {
+    rental.customer = customer;
+  }
+  const film = repository.getFilmByInventoryID(rental.inventory_id);
+  if (film) {
+    rental.film = film;
+  }
+  const staff = repository.getStaffByID(rental.staff_id);
+  if (staff) {
+    rental.staff = staff;
+  }
+  rental.payments = repository.getPaymentsByRentalID(rental.rental_id);
+  return rental;
 }

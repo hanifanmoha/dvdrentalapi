@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStaffByID = exports.getStaff = exports.getStoreByID = exports.getStores = exports.getCustomerByID = exports.getCustomers = exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = exports.getIndex = void 0;
+exports.getRentalByID = exports.getStaffByID = exports.getStaff = exports.getStoreByID = exports.getStores = exports.getCustomerRental = exports.getCustomerByID = exports.getCustomers = exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = exports.getIndex = void 0;
 const service = __importStar(require("./service"));
 const controller_utils_1 = require("./utils/controller-utils");
 // Indexes
@@ -143,6 +143,14 @@ function getCustomerByID(req, res) {
     }
 }
 exports.getCustomerByID = getCustomerByID;
+function getCustomerRental(req, res) {
+    const query = (0, controller_utils_1.parsePaginationQuery)(req.query);
+    const { id } = req.params;
+    const { result, totalData } = service.getCustomerRental(parseInt(id), query);
+    const response = (0, controller_utils_1.generatePaginationResponse)(query, result, totalData);
+    res.send(response);
+}
+exports.getCustomerRental = getCustomerRental;
 // Stores & Staff
 function getStores(req, res) {
     const query = (0, controller_utils_1.parsePaginationQuery)(req.query);
@@ -186,3 +194,18 @@ function getStaffByID(req, res) {
     }
 }
 exports.getStaffByID = getStaffByID;
+// Rentals, Inventories, Payments
+function getRentalByID(req, res) {
+    const { id } = req.params;
+    const rental = service.getRentalByID(parseInt(id));
+    if (rental) {
+        const response = (0, controller_utils_1.generateGeneralResponse)(true, 'Success get rental', rental, null);
+        res.send(response);
+    }
+    else {
+        res
+            .status(404)
+            .send((0, controller_utils_1.generateGeneralResponse)(false, 'Not Found', null, null));
+    }
+}
+exports.getRentalByID = getRentalByID;

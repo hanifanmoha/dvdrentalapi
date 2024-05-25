@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStaffByID = exports.getStaff = exports.getStoreByID = exports.getStores = exports.getCustomerByID = exports.getCustomers = exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = void 0;
+exports.getRentalByID = exports.getStaffByID = exports.getStaff = exports.getStoreByID = exports.getStores = exports.getCustomerRental = exports.getCustomerByID = exports.getCustomers = exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = void 0;
 const repository = __importStar(require("./repository"));
 // Films
 function getFilms(query) {
@@ -111,6 +111,10 @@ function getCustomerByID(id) {
     return customer;
 }
 exports.getCustomerByID = getCustomerByID;
+function getCustomerRental(customerID, query) {
+    return repository.getRentalsByCustomerID(customerID, query);
+}
+exports.getCustomerRental = getCustomerRental;
 // Stores & Staff
 function getStores(query) {
     return repository.getStores(query);
@@ -171,3 +175,24 @@ function getStaffByID(id) {
     return staff;
 }
 exports.getStaffByID = getStaffByID;
+// Rentals, Inventories, Payments
+function getRentalByID(id) {
+    const rental = repository.getRentalByID(id);
+    if (!rental)
+        return;
+    const customer = repository.getCustomerByID(rental.customer_id);
+    if (customer) {
+        rental.customer = customer;
+    }
+    const film = repository.getFilmByInventoryID(rental.inventory_id);
+    if (film) {
+        rental.film = film;
+    }
+    const staff = repository.getStaffByID(rental.staff_id);
+    if (staff) {
+        rental.staff = staff;
+    }
+    rental.payments = repository.getPaymentsByRentalID(rental.rental_id);
+    return rental;
+}
+exports.getRentalByID = getRentalByID;

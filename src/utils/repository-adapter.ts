@@ -13,7 +13,11 @@ export class RepositoryAdapter<T> {
     return this.list;
   }
 
-  getFiltered(search: string): T[] {
+  getOne(key: keyof T, value: T[keyof T]): T | undefined {
+    return this.list.find((f) => f[key] === value);
+  }
+
+  getListBySearch(search: string): T[] {
     const filtered = _.filter(this.list, (t: T) => {
       for (let key of this.searchKeys) {
         const val = t[key];
@@ -26,16 +30,16 @@ export class RepositoryAdapter<T> {
     return filtered;
   }
 
-  getOne(key: keyof T, value: T[keyof T]): T | undefined {
-    return this.list.find((f) => f[key] === value);
-  }
-
-  getList(key: keyof T, value: T[keyof T] | T[keyof T][]) {
+  getListByKey<K extends keyof T>(key: K, value: T[K] | T[K][]) {
     if (_.isArray(value)) {
       return this.list.filter((item) => _.includes(value, item[key]));
     } else {
       return this.list.filter((item) => item[key] === value);
     }
+  }
+
+  getListByFilter(filter: Partial<T>): T[] {
+    return _.filter(this.list, filter) as T[];
   }
 }
 

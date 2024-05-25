@@ -9,7 +9,10 @@ import {
   Film,
   FilmActor,
   FilmCategory,
+  Inventory,
   Language,
+  Payment,
+  Rental,
   Staff,
   Store,
 } from './models/data-models';
@@ -25,6 +28,11 @@ const actors: Actor[] = _.sortBy(dvdRentalDB.actor, ['actor_id']);
 const customer: Customer[] = _.sortBy(dvdRentalDB.customer, ['customer_id']);
 const staff: Staff[] = _.sortBy(dvdRentalDB.staff, ['staff_id']);
 const stores: Store[] = _.sortBy(dvdRentalDB.store, ['store_id']);
+const inventories: Inventory[] = _.sortBy(dvdRentalDB.inventory, [
+  'inventory_id',
+]);
+const rentals: Rental[] = _.sortBy(dvdRentalDB.rental, ['rental_id']);
+const payments: Payment[] = _.sortBy(dvdRentalDB.payment, ['payment_id']);
 
 const addresses: Address[] = dvdRentalDB.address;
 const cities: City[] = dvdRentalDB.city;
@@ -51,6 +59,10 @@ const addressAdapter = new RepositoryAdapter(addresses);
 const cityAdapter = new RepositoryAdapter(cities);
 const countryAdapter = new RepositoryAdapter(countries);
 
+const inventoryAdapter = new RepositoryAdapter(inventories);
+const rentalAdapter = new RepositoryAdapter(rentals);
+const paymentAdapter = new RepositoryAdapter(payments);
+
 const filmCategoryAdapter = new RepositoryAdapter(filmsCategories);
 const filmActorAdapter = new RepositoryAdapter(filmsActors);
 
@@ -66,13 +78,31 @@ export function getList<T>(
   if (query.page < 1) {
     return { result: [], totalData: 0 };
   }
-  const filtered = adapter.getFiltered(query.search);
+  const filtered = adapter.getListBySearch(query.search);
 
   const start = query.length * (query.page - 1);
   const end = query.length * query.page;
   return {
     result: _.slice(filtered, start, end),
     totalData: filtered.length,
+  };
+}
+
+export function paginateList<T>(
+  list: T[],
+  query: PaginationQuery
+): {
+  result: T[];
+  totalData: number;
+} {
+  if (query.page < 1) {
+    return { result: [], totalData: 0 };
+  }
+  const start = query.length * (query.page - 1);
+  const end = query.length * query.page;
+  return {
+    result: _.slice(list, start, end),
+    totalData: list.length,
   };
 }
 
@@ -86,7 +116,7 @@ export function getFilms(query: PaginationQuery): {
     return { result: [], totalData: 0 };
   }
 
-  const filtered = filmAdapter.getFiltered(query.search);
+  const filtered = filmAdapter.getListBySearch(query.search);
 
   const start = query.length * (query.page - 1);
   const end = query.length * query.page;
@@ -101,25 +131,31 @@ export function getFilmByID(id: number): Film | undefined {
 }
 
 export function getFilmsByYear(year: number): Film[] {
-  return filmAdapter.getList('release_year', 2006);
+  return filmAdapter.getListByKey('release_year', 2006);
 }
 
 export function getFilmsByLanguageID(languageID: number): Film[] {
-  return filmAdapter.getList('language_id', languageID);
+  return filmAdapter.getListByKey('language_id', languageID);
 }
 
 export function getFilmsByActorID(actorID: number): Film[] {
   const pivots = filmActorAdapter
-    .getList('actor_id', actorID)
+    .getListByKey('actor_id', actorID)
     .map((p) => p.film_id);
-  return filmAdapter.getList('film_id', pivots);
+  return filmAdapter.getListByKey('film_id', pivots);
 }
 
 export function getFilmsByCategoryID(categoryID: number): Film[] {
   const pivots = filmCategoryAdapter
-    .getList('category_id', categoryID)
+    .getListByKey('category_id', categoryID)
     .map((p) => p.film_id);
-  return filmAdapter.getList('film_id', pivots);
+  return filmAdapter.getListByKey('film_id', pivots);
+}
+
+export function getFilmByInventoryID(inventoryID: number): Film | undefined {
+  const inventory = inventoryAdapter.getOne('inventory_id', inventoryID);
+  if (!inventory) return;
+  return filmAdapter.getOne('film_id', inventory.film_id);
 }
 
 // Languages
@@ -148,11 +184,11 @@ export function getActorByID(id: number): Actor | undefined {
   return actorAdapter.getOne('actor_id', id);
 }
 
-export function getActorsByFilmID(filmId: number): Actor[] {
+export function getActorsByFilmID(filmID: number): Actor[] {
   const pivots = filmActorAdapter
-    .getList('film_id', filmId)
+    .getListByKey('film_id', filmID)
     .map((p) => p.actor_id);
-  return actorAdapter.getList('actor_id', pivots);
+  return actorAdapter.getListByKey('actor_id', pivots);
 }
 
 // Categories
@@ -168,11 +204,11 @@ export function getCategoryByID(id: number): Category | undefined {
   return categoryAdapter.getOne('category_id', id);
 }
 
-export function getCategriesByFilmID(filmId: number): Category[] {
+export function getCategriesByFilmID(filmID: number): Category[] {
   const pivots = filmCategoryAdapter
-    .getList('film_id', filmId)
+    .getListByKey('film_id', filmID)
     .map((p) => p.category_id);
-  return categoryAdapter.getList('category_id', pivots);
+  return categoryAdapter.getListByKey('category_id', pivots);
 }
 
 // Customers
@@ -227,5 +263,26 @@ export function getStaffByID(id: number): Staff | undefined {
 }
 
 export function getStaffByStoreID(storeID: number): Staff[] {
-  return staffAdapter.getList('store_id', storeID);
+  return staffAdapter.getListByKey('store_id', storeID);
+}
+
+// Rentals, Inventories, Payments
+
+export function getRentalsByCustomerID(
+  customerID: number,
+  query: PaginationQuery
+): {
+  result: Rental[];
+  totalData: number;
+} {
+  const rentals = rentalAdapter.getListByFilter({ customer_id: customerID });
+  return paginateList<Rental>(rentals, query);
+}
+
+export function getRentalByID(id: number): Rental | undefined {
+  return rentalAdapter.getOne('rental_id', id);
+}
+
+export function getPaymentsByRentalID(rentalID: number): Payment[] {
+  return paymentAdapter.getListByKey('rental_id', rentalID);
 }
