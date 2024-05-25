@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DVD Rental API</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 0;
+        margin: 0;
+      }
+      .markdown-body {
+        box-sizing: border-box;
+        margin: 0 auto;
+        padding: 45px;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="markdown-body">
+      <div id="content" class="container"></div>
+    </div>
+    <script>
+      const markdownUrl = '/readme';
+
+      fetch(markdownUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              'Network response was not ok ' + response.statusText
+            );
+          }
+          return response.text();
+        })
+        .then((markdown) => {
+          const htmlContent = marked.parse(markdown);
+          document.getElementById('content').innerHTML = htmlContent;
+        })
+        .catch((error) => {
+          document.getElementById('content').innerHTML = marked.parse(
+            `# Error Loading Documentation\n\n${error}`
+          );
+        });
+    </script>
+  </body>
+</html>

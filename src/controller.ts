@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as service from './service';
+import fs from 'fs';
 import {
   generateGeneralResponse,
   generatePaginationResponse,
@@ -19,13 +20,18 @@ import {
   Staff,
   Store,
 } from './models/data-models';
+import path from 'path';
 
 // Indexes
 
 export function getIndex(req: Request, res: Response) {
-  (req: Request, res: Response) => {
-    res.send('DVD Rental API');
-  };
+  res.render('index');
+}
+
+export function getReadMe(req: Request, res: Response) {
+  console.log('get readme');
+  const p = path.join(__dirname, '..', 'README.md');
+  res.sendFile(p);
 }
 
 // Films

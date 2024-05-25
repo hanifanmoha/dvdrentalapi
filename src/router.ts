@@ -36,6 +36,7 @@ const rentalRouter: Router = express.Router();
 rentalRouter.get('/:id', controller.getRentalByID);
 
 router.get('/', controller.getIndex);
+router.get('/readme', controller.getReadMe);
 router.use('/films', filmRouter);
 router.use('/languages', languageRouter);
 router.use('/actors', actorRouter);

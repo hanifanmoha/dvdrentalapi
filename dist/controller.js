@@ -22,17 +22,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRentalByID = exports.getStaffByID = exports.getStaff = exports.getStoreByID = exports.getStores = exports.getCustomerRental = exports.getCustomerByID = exports.getCustomers = exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = exports.getIndex = void 0;
+exports.getRentalByID = exports.getStaffByID = exports.getStaff = exports.getStoreByID = exports.getStores = exports.getCustomerRental = exports.getCustomerByID = exports.getCustomers = exports.getCategoryByID = exports.getCategories = exports.getActorByID = exports.getActors = exports.getLanguageByID = exports.getLanguages = exports.getFilmByID = exports.getFilms = exports.getReadMe = exports.getIndex = void 0;
 const service = __importStar(require("./service"));
 const controller_utils_1 = require("./utils/controller-utils");
+const path_1 = __importDefault(require("path"));
 // Indexes
 function getIndex(req, res) {
-    (req, res) => {
-        res.send('DVD Rental API');
-    };
+    res.render('index');
 }
 exports.getIndex = getIndex;
+function getReadMe(req, res) {
+    console.log('get readme');
+    const p = path_1.default.join(__dirname, '..', 'README.md');
+    res.sendFile(p);
+}
+exports.getReadMe = getReadMe;
 // Films
 function getFilms(req, res) {
     const query = (0, controller_utils_1.parsePaginationQuery)(req.query);
