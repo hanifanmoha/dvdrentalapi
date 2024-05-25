@@ -25,7 +25,9 @@
 > | --------- | ------------------ | ----------------------- |
 > | `200`     | `application/json` | List of films paginated |
 
-##### Example cURL
+##### Example
+
+> https://dvdrentalapi.vercel.app/films?page=1&length=10&search=Dinosaur
 
 > ```javascript
 >  curl --location 'https://dvdrentalapi.vercel.app/films?page=1&length=10&search=Dinosaur'
@@ -49,7 +51,9 @@
 > | `200`     | `application/json` | Film Object     |
 > | `404`     | `application/json` | Not Found Error |
 
-##### Example cURL
+##### Example
+
+> https://dvdrentalapi.vercel.app/films/1
 
 > ```javascript
 >  curl --location 'https://dvdrentalapi.vercel.app/films/1'

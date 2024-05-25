@@ -16,6 +16,6 @@ app.use((0, cookie_parser_1.default)());
 app.engine('html', require('ejs').renderFile);
 app.set('views', path_1.default.join(__dirname, '..', 'views'));
 app.set('view engine', 'html');
-app.use(express_1.default.static('public'));
+app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
 app.use('/', router_1.default);
 exports.default = app;
