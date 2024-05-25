@@ -14,10 +14,7 @@ import {
   Store,
 } from './models/data-models';
 import { PaginationQuery } from './models/controller-models';
-import {
-  RepositoryAdapter,
-  RepositoryAdapterRelation,
-} from './utils/repository-adapter';
+import { RepositoryAdapter } from './utils/repository-adapter';
 
 const dvdRentalDB = require('../dvdrental.json');
 
@@ -35,49 +32,27 @@ const countries: Country[] = dvdRentalDB.country;
 const filmsCategories: FilmCategory[] = dvdRentalDB.film_category;
 const filmsActors: FilmActor[] = dvdRentalDB.film_actor;
 
-const filmAdapter = new RepositoryAdapter(films, 'film_id', [
-  'title',
-  'description',
-]);
-const languageAdapter = new RepositoryAdapter(languages, 'language_id', [
-  'name',
-]);
-const categoryAdapter = new RepositoryAdapter(categories, 'category_id', [
-  'name',
-]);
-const actorAdapter = new RepositoryAdapter(actors, 'actor_id', [
-  'first_name',
-  'last_name',
-]);
-const customerAdapter = new RepositoryAdapter(customer, 'customer_id', [
+const filmAdapter = new RepositoryAdapter(films, ['title', 'description']);
+const languageAdapter = new RepositoryAdapter(languages, ['name']);
+const categoryAdapter = new RepositoryAdapter(categories, ['name']);
+const actorAdapter = new RepositoryAdapter(actors, ['first_name', 'last_name']);
+const customerAdapter = new RepositoryAdapter(customer, [
   'first_name',
   'last_name',
   'email',
 ]);
-const staffAdapter = new RepositoryAdapter(staff, 'staff_id', [
+const staffAdapter = new RepositoryAdapter(staff, [
   'first_name',
   'last_name',
   'email',
 ]);
-const storeAdapter = new RepositoryAdapter(stores, 'store_id', ['name']);
-const addressAdapter = new RepositoryAdapter(addresses, 'address_id', []);
-const cityAdapter = new RepositoryAdapter(cities, 'city_id', []);
-const countryAdapter = new RepositoryAdapter(countries, 'country_id', []);
+const storeAdapter = new RepositoryAdapter(stores, ['name']);
+const addressAdapter = new RepositoryAdapter(addresses);
+const cityAdapter = new RepositoryAdapter(cities);
+const countryAdapter = new RepositoryAdapter(countries);
 
-const filmCategoryAdapter = new RepositoryAdapterRelation(
-  filmsCategories,
-  films,
-  categories,
-  'film_id',
-  'category_id'
-);
-const filmActorAdapter = new RepositoryAdapterRelation(
-  filmsActors,
-  films,
-  actors,
-  'film_id',
-  'actor_id'
-);
+const filmCategoryAdapter = new RepositoryAdapter(filmsCategories);
+const filmActorAdapter = new RepositoryAdapter(filmsActors);
 
 // General
 
@@ -122,23 +97,29 @@ export function getFilms(query: PaginationQuery): {
 }
 
 export function getFilmByID(id: number): Film | undefined {
-  return filmAdapter.getByID(id);
+  return filmAdapter.getOne('film_id', id);
 }
 
 export function getFilmsByYear(year: number): Film[] {
-  return filmAdapter.getByKey('release_year', 2006);
+  return filmAdapter.getList('release_year', 2006);
 }
 
 export function getFilmsByLanguageID(languageID: number): Film[] {
-  return filmAdapter.getByKey('language_id', languageID);
+  return filmAdapter.getList('language_id', languageID);
 }
 
 export function getFilmsByActorID(actorID: number): Film[] {
-  return filmActorAdapter.getByB(actorID);
+  const pivots = filmActorAdapter
+    .getList('actor_id', actorID)
+    .map((p) => p.film_id);
+  return filmAdapter.getList('film_id', pivots);
 }
 
 export function getFilmsByCategoryID(categoryID: number): Film[] {
-  return filmCategoryAdapter.getByB(categoryID);
+  const pivots = filmCategoryAdapter
+    .getList('category_id', categoryID)
+    .map((p) => p.film_id);
+  return filmAdapter.getList('film_id', pivots);
 }
 
 // Languages
@@ -151,7 +132,7 @@ export function getLanguages(query: PaginationQuery): {
 }
 
 export function getLanguageByID(id: number): Language | undefined {
-  return languageAdapter.getByID(id);
+  return languageAdapter.getOne('language_id', id);
 }
 
 // Actors
@@ -164,11 +145,14 @@ export function getActors(query: PaginationQuery): {
 }
 
 export function getActorByID(id: number): Actor | undefined {
-  return actorAdapter.getByID(id);
+  return actorAdapter.getOne('actor_id', id);
 }
 
 export function getActorsByFilmID(filmId: number): Actor[] {
-  return filmActorAdapter.getByA(filmId);
+  const pivots = filmActorAdapter
+    .getList('film_id', filmId)
+    .map((p) => p.actor_id);
+  return actorAdapter.getList('actor_id', pivots);
 }
 
 // Categories
@@ -181,11 +165,14 @@ export function getCategories(query: PaginationQuery): {
 }
 
 export function getCategoryByID(id: number): Category | undefined {
-  return categoryAdapter.getByID(id);
+  return categoryAdapter.getOne('category_id', id);
 }
 
 export function getCategriesByFilmID(filmId: number): Category[] {
-  return filmCategoryAdapter.getByA(filmId);
+  const pivots = filmCategoryAdapter
+    .getList('film_id', filmId)
+    .map((p) => p.category_id);
+  return categoryAdapter.getList('category_id', pivots);
 }
 
 // Customers
@@ -198,21 +185,21 @@ export function getCustomers(query: PaginationQuery): {
 }
 
 export function getCustomerByID(id: number): Customer | undefined {
-  return customerAdapter.getByID(id);
+  return customerAdapter.getOne('customer_id', id);
 }
 
 // Addresses, Cities, Countries
 
 export function getAddressByID(id: number): Address | undefined {
-  return addressAdapter.getByID(id);
+  return addressAdapter.getOne('address_id', id);
 }
 
 export function getCityByID(id: number): City | undefined {
-  return cityAdapter.getByID(id);
+  return cityAdapter.getOne('city_id', id);
 }
 
 export function getCountryByID(id: number): Country | undefined {
-  return countryAdapter.getByID(id);
+  return countryAdapter.getOne('country_id', id);
 }
 
 // Stores, Staff
@@ -225,7 +212,7 @@ export function getStores(query: PaginationQuery): {
 }
 
 export function getStoreByID(id: number): Store | undefined {
-  return storeAdapter.getByID(id);
+  return storeAdapter.getOne('store_id', id);
 }
 
 export function getStaff(query: PaginationQuery): {
@@ -236,9 +223,9 @@ export function getStaff(query: PaginationQuery): {
 }
 
 export function getStaffByID(id: number): Staff | undefined {
-  return staffAdapter.getByID(id);
+  return staffAdapter.getOne('staff_id', id);
 }
 
 export function getStaffByStoreID(storeID: number): Staff[] {
-  return staffAdapter.getByKey('store_id', storeID);
+  return staffAdapter.getList('store_id', storeID);
 }

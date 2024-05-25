@@ -19,36 +19,26 @@ const cities = dvdRentalDB.city;
 const countries = dvdRentalDB.country;
 const filmsCategories = dvdRentalDB.film_category;
 const filmsActors = dvdRentalDB.film_actor;
-const filmAdapter = new repository_adapter_1.RepositoryAdapter(films, 'film_id', [
-    'title',
-    'description',
-]);
-const languageAdapter = new repository_adapter_1.RepositoryAdapter(languages, 'language_id', [
-    'name',
-]);
-const categoryAdapter = new repository_adapter_1.RepositoryAdapter(categories, 'category_id', [
-    'name',
-]);
-const actorAdapter = new repository_adapter_1.RepositoryAdapter(actors, 'actor_id', [
-    'first_name',
-    'last_name',
-]);
-const customerAdapter = new repository_adapter_1.RepositoryAdapter(customer, 'customer_id', [
+const filmAdapter = new repository_adapter_1.RepositoryAdapter(films, ['title', 'description']);
+const languageAdapter = new repository_adapter_1.RepositoryAdapter(languages, ['name']);
+const categoryAdapter = new repository_adapter_1.RepositoryAdapter(categories, ['name']);
+const actorAdapter = new repository_adapter_1.RepositoryAdapter(actors, ['first_name', 'last_name']);
+const customerAdapter = new repository_adapter_1.RepositoryAdapter(customer, [
     'first_name',
     'last_name',
     'email',
 ]);
-const staffAdapter = new repository_adapter_1.RepositoryAdapter(staff, 'staff_id', [
+const staffAdapter = new repository_adapter_1.RepositoryAdapter(staff, [
     'first_name',
     'last_name',
     'email',
 ]);
-const storeAdapter = new repository_adapter_1.RepositoryAdapter(stores, 'store_id', ['name']);
-const addressAdapter = new repository_adapter_1.RepositoryAdapter(addresses, 'address_id', []);
-const cityAdapter = new repository_adapter_1.RepositoryAdapter(cities, 'city_id', []);
-const countryAdapter = new repository_adapter_1.RepositoryAdapter(countries, 'country_id', []);
-const filmCategoryAdapter = new repository_adapter_1.RepositoryAdapterRelation(filmsCategories, films, categories, 'film_id', 'category_id');
-const filmActorAdapter = new repository_adapter_1.RepositoryAdapterRelation(filmsActors, films, actors, 'film_id', 'actor_id');
+const storeAdapter = new repository_adapter_1.RepositoryAdapter(stores, ['name']);
+const addressAdapter = new repository_adapter_1.RepositoryAdapter(addresses);
+const cityAdapter = new repository_adapter_1.RepositoryAdapter(cities);
+const countryAdapter = new repository_adapter_1.RepositoryAdapter(countries);
+const filmCategoryAdapter = new repository_adapter_1.RepositoryAdapter(filmsCategories);
+const filmActorAdapter = new repository_adapter_1.RepositoryAdapter(filmsActors);
 // General
 function getList(adapter, query) {
     if (query.page < 1) {
@@ -78,23 +68,29 @@ function getFilms(query) {
 }
 exports.getFilms = getFilms;
 function getFilmByID(id) {
-    return filmAdapter.getByID(id);
+    return filmAdapter.getOne('film_id', id);
 }
 exports.getFilmByID = getFilmByID;
 function getFilmsByYear(year) {
-    return filmAdapter.getByKey('release_year', 2006);
+    return filmAdapter.getList('release_year', 2006);
 }
 exports.getFilmsByYear = getFilmsByYear;
 function getFilmsByLanguageID(languageID) {
-    return filmAdapter.getByKey('language_id', languageID);
+    return filmAdapter.getList('language_id', languageID);
 }
 exports.getFilmsByLanguageID = getFilmsByLanguageID;
 function getFilmsByActorID(actorID) {
-    return filmActorAdapter.getByB(actorID);
+    const pivots = filmActorAdapter
+        .getList('actor_id', actorID)
+        .map((p) => p.film_id);
+    return filmAdapter.getList('film_id', pivots);
 }
 exports.getFilmsByActorID = getFilmsByActorID;
 function getFilmsByCategoryID(categoryID) {
-    return filmCategoryAdapter.getByB(categoryID);
+    const pivots = filmCategoryAdapter
+        .getList('category_id', categoryID)
+        .map((p) => p.film_id);
+    return filmAdapter.getList('film_id', pivots);
 }
 exports.getFilmsByCategoryID = getFilmsByCategoryID;
 // Languages
@@ -103,7 +99,7 @@ function getLanguages(query) {
 }
 exports.getLanguages = getLanguages;
 function getLanguageByID(id) {
-    return languageAdapter.getByID(id);
+    return languageAdapter.getOne('language_id', id);
 }
 exports.getLanguageByID = getLanguageByID;
 // Actors
@@ -112,11 +108,14 @@ function getActors(query) {
 }
 exports.getActors = getActors;
 function getActorByID(id) {
-    return actorAdapter.getByID(id);
+    return actorAdapter.getOne('actor_id', id);
 }
 exports.getActorByID = getActorByID;
 function getActorsByFilmID(filmId) {
-    return filmActorAdapter.getByA(filmId);
+    const pivots = filmActorAdapter
+        .getList('film_id', filmId)
+        .map((p) => p.actor_id);
+    return actorAdapter.getList('actor_id', pivots);
 }
 exports.getActorsByFilmID = getActorsByFilmID;
 // Categories
@@ -125,11 +124,14 @@ function getCategories(query) {
 }
 exports.getCategories = getCategories;
 function getCategoryByID(id) {
-    return categoryAdapter.getByID(id);
+    return categoryAdapter.getOne('category_id', id);
 }
 exports.getCategoryByID = getCategoryByID;
 function getCategriesByFilmID(filmId) {
-    return filmCategoryAdapter.getByA(filmId);
+    const pivots = filmCategoryAdapter
+        .getList('film_id', filmId)
+        .map((p) => p.category_id);
+    return categoryAdapter.getList('category_id', pivots);
 }
 exports.getCategriesByFilmID = getCategriesByFilmID;
 // Customers
@@ -138,20 +140,20 @@ function getCustomers(query) {
 }
 exports.getCustomers = getCustomers;
 function getCustomerByID(id) {
-    return customerAdapter.getByID(id);
+    return customerAdapter.getOne('customer_id', id);
 }
 exports.getCustomerByID = getCustomerByID;
 // Addresses, Cities, Countries
 function getAddressByID(id) {
-    return addressAdapter.getByID(id);
+    return addressAdapter.getOne('address_id', id);
 }
 exports.getAddressByID = getAddressByID;
 function getCityByID(id) {
-    return cityAdapter.getByID(id);
+    return cityAdapter.getOne('city_id', id);
 }
 exports.getCityByID = getCityByID;
 function getCountryByID(id) {
-    return countryAdapter.getByID(id);
+    return countryAdapter.getOne('country_id', id);
 }
 exports.getCountryByID = getCountryByID;
 // Stores, Staff
@@ -160,7 +162,7 @@ function getStores(query) {
 }
 exports.getStores = getStores;
 function getStoreByID(id) {
-    return storeAdapter.getByID(id);
+    return storeAdapter.getOne('store_id', id);
 }
 exports.getStoreByID = getStoreByID;
 function getStaff(query) {
@@ -168,10 +170,10 @@ function getStaff(query) {
 }
 exports.getStaff = getStaff;
 function getStaffByID(id) {
-    return staffAdapter.getByID(id);
+    return staffAdapter.getOne('staff_id', id);
 }
 exports.getStaffByID = getStaffByID;
 function getStaffByStoreID(storeID) {
-    return staffAdapter.getByKey('store_id', storeID);
+    return staffAdapter.getList('store_id', storeID);
 }
 exports.getStaffByStoreID = getStaffByStoreID;

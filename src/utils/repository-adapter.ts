@@ -2,12 +2,10 @@ import _ from 'lodash';
 
 export class RepositoryAdapter<T> {
   list: T[];
-  primaryKey: keyof T;
   searchKeys: (keyof T)[];
 
-  constructor(_list: T[], _primaryKey: keyof T, _searchKeys: (keyof T)[]) {
+  constructor(_list: T[], _searchKeys: (keyof T)[] = []) {
     this.list = _list;
-    this.primaryKey = _primaryKey;
     this.searchKeys = _searchKeys;
   }
 
@@ -28,15 +26,16 @@ export class RepositoryAdapter<T> {
     return filtered;
   }
 
-  getByID(id: number): T | undefined {
-    const res = this.list.find((f) => f[this.primaryKey] === id);
-
-    return res;
+  getOne(key: keyof T, value: T[keyof T]): T | undefined {
+    return this.list.find((f) => f[key] === value);
   }
 
-  getByKey(key: keyof T, search: T[keyof T]) {
-    const x = this.list[0][key];
-    return this.list.filter((item) => item[key] === search);
+  getList(key: keyof T, value: T[keyof T] | T[keyof T][]) {
+    if (_.isArray(value)) {
+      return this.list.filter((item) => _.includes(value, item[key]));
+    } else {
+      return this.list.filter((item) => item[key] === value);
+    }
   }
 }
 

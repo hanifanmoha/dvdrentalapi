@@ -6,9 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RepositoryAdapterRelation = exports.RepositoryAdapter = void 0;
 const lodash_1 = __importDefault(require("lodash"));
 class RepositoryAdapter {
-    constructor(_list, _primaryKey, _searchKeys) {
+    constructor(_list, _searchKeys = []) {
         this.list = _list;
-        this.primaryKey = _primaryKey;
         this.searchKeys = _searchKeys;
     }
     getAll() {
@@ -26,13 +25,16 @@ class RepositoryAdapter {
         });
         return filtered;
     }
-    getByID(id) {
-        const res = this.list.find((f) => f[this.primaryKey] === id);
-        return res;
+    getOne(key, value) {
+        return this.list.find((f) => f[key] === value);
     }
-    getByKey(key, search) {
-        const x = this.list[0][key];
-        return this.list.filter((item) => item[key] === search);
+    getList(key, value) {
+        if (lodash_1.default.isArray(value)) {
+            return this.list.filter((item) => lodash_1.default.includes(value, item[key]));
+        }
+        else {
+            return this.list.filter((item) => item[key] === value);
+        }
     }
 }
 exports.RepositoryAdapter = RepositoryAdapter;
