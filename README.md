@@ -290,7 +290,7 @@
 
 </details>
 
-#### Get customers by ID
+#### Get customer by ID
 
 <details>
 
@@ -298,9 +298,11 @@
 
 ##### Parameters
 
-> | name | type     | data type | default | description |
-> | ---- | -------- | --------- | ------- | ----------- |
-> | id   | required | number    |         | Customer ID |
+> | name   | type     | data type | default | description                |
+> | ------ | -------- | --------- | ------- | -------------------------- |
+> | id     | required | number    |         | Customer ID                |
+> | page   | optional | number    | 1       | page                       |
+> | length | optional | number    | 10      | number of results per page |
 
 ##### Responses
 
@@ -315,6 +317,34 @@
 
 > ```javascript
 >  curl --location 'https://dvdrentalapi.vercel.app/customers/1'
+> ```
+
+</details>
+
+#### Get customer rental
+
+<details>
+
+<summary><code>GET</code> <code><b>/customers/:id/rentals</b></code></summary>
+
+##### Parameters
+
+> | name | type     | data type | default | description |
+> | ---- | -------- | --------- | ------- | ----------- |
+> | id   | required | number    |         | Customer ID |
+
+##### Responses
+
+> | http code | content-type       | response                  |
+> | --------- | ------------------ | ------------------------- |
+> | `200`     | `application/json` | List of rentals paginated |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/customers/1/rentals
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/customers/1/rentals'
 > ```
 
 </details>
@@ -441,6 +471,39 @@
 
 > ```javascript
 >  curl --location 'https://dvdrentalapi.vercel.app/staff/1'
+> ```
+
+</details>
+
+---
+
+### Rentals Resources
+
+#### Get rental by ID
+
+<details>
+
+<summary><code>GET</code> <code><b>/rentals/:id</b></code></summary>
+
+##### Parameters
+
+> | name | type     | data type | default | description |
+> | ---- | -------- | --------- | ------- | ----------- |
+> | id   | required | number    |         | Rental ID   |
+
+##### Responses
+
+> | http code | content-type       | response        |
+> | --------- | ------------------ | --------------- |
+> | `200`     | `application/json` | Rental Object   |
+> | `404`     | `application/json` | Not Found Error |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/rentals/1
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/rentals/1'
 > ```
 
 </details>
