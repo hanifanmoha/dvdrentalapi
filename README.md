@@ -257,3 +257,192 @@
 </details>
 
 ---
+
+### Customer Resources
+
+#### Get customers
+
+<details>
+
+<summary><code>GET</code> <code><b>/customers</b></code></summary>
+
+##### Parameters
+
+> | name   | type     | data type | default | description                |
+> | ------ | -------- | --------- | ------- | -------------------------- |
+> | page   | optional | number    | 1       | page                       |
+> | length | optional | number    | 10      | number of results per page |
+> | search | optional | text      |         | search key                 |
+
+##### Responses
+
+> | http code | content-type       | response                    |
+> | --------- | ------------------ | --------------------------- |
+> | `200`     | `application/json` | List of customers paginated |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/customers?page=1&length=10&search=mar
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/customers?page=1&length=10&search=mar'
+> ```
+
+</details>
+
+#### Get customers by ID
+
+<details>
+
+<summary><code>GET</code> <code><b>/customers/:id</b></code></summary>
+
+##### Parameters
+
+> | name | type     | data type | default | description |
+> | ---- | -------- | --------- | ------- | ----------- |
+> | id   | required | number    |         | Customer ID |
+
+##### Responses
+
+> | http code | content-type       | response        |
+> | --------- | ------------------ | --------------- |
+> | `200`     | `application/json` | Customer Object |
+> | `404`     | `application/json` | Not Found Error |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/customers/1
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/customers/1'
+> ```
+
+</details>
+
+---
+
+### Store Resources
+
+#### Get stores
+
+<details>
+
+<summary><code>GET</code> <code><b>/stores</b></code></summary>
+
+##### Parameters
+
+> | name   | type     | data type | default | description                |
+> | ------ | -------- | --------- | ------- | -------------------------- |
+> | page   | optional | number    | 1       | page                       |
+> | length | optional | number    | 10      | number of results per page |
+> | search | optional | text      |         | search key                 |
+
+##### Responses
+
+> | http code | content-type       | response                 |
+> | --------- | ------------------ | ------------------------ |
+> | `200`     | `application/json` | List of stores paginated |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/stores?page=1&length=10&search=saki
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/stores?page=1&length=10&search=saki'
+> ```
+
+</details>
+
+#### Get stores by ID
+
+<details>
+
+<summary><code>GET</code> <code><b>/stores/:id</b></code></summary>
+
+##### Parameters
+
+> | name | type     | data type | default | description |
+> | ---- | -------- | --------- | ------- | ----------- |
+> | id   | required | number    |         | Store ID    |
+
+##### Responses
+
+> | http code | content-type       | response        |
+> | --------- | ------------------ | --------------- |
+> | `200`     | `application/json` | Store Object    |
+> | `404`     | `application/json` | Not Found Error |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/stores/1
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/stores/1'
+> ```
+
+</details>
+
+---
+
+### Staff Resources
+
+#### Get staff
+
+<details>
+
+<summary><code>GET</code> <code><b>/staff</b></code></summary>
+
+##### Parameters
+
+> | name   | type     | data type | default | description                |
+> | ------ | -------- | --------- | ------- | -------------------------- |
+> | page   | optional | number    | 1       | page                       |
+> | length | optional | number    | 10      | number of results per page |
+> | search | optional | text      |         | search key                 |
+
+##### Responses
+
+> | http code | content-type       | response                |
+> | --------- | ------------------ | ----------------------- |
+> | `200`     | `application/json` | List of staff paginated |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/staff?page=1&length=10&search=mi
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/staff?page=1&length=10&search=saki'
+> ```
+
+</details>
+
+#### Get staff by ID
+
+<details>
+
+<summary><code>GET</code> <code><b>/staff/:id</b></code></summary>
+
+##### Parameters
+
+> | name | type     | data type | default | description |
+> | ---- | -------- | --------- | ------- | ----------- |
+> | id   | required | number    |         | Staff ID    |
+
+##### Responses
+
+> | http code | content-type       | response        |
+> | --------- | ------------------ | --------------- |
+> | `200`     | `application/json` | Staff Object    |
+> | `404`     | `application/json` | Not Found Error |
+
+##### Example
+
+> https://dvdrentalapi.vercel.app/staff/1
+
+> ```javascript
+>  curl --location 'https://dvdrentalapi.vercel.app/staff/1'
+> ```
+
+</details>
+
+---
