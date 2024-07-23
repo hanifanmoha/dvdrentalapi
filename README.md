@@ -4,6 +4,10 @@
 
 - Base URL : https://dvdrentalapi.vercel.app
 
+- ER Diagram
+
+![ER Diagram](https://dvdrentalapi.vercel.app/erd.png)
+
 ---
 
 ### Film Resources
